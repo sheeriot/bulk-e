@@ -99,7 +99,11 @@ for i in range(0, len(deviceimport_df)):
 
   response = requests.post(url, data_json, params={"access_token": NS_TOKEN}, headers=HEADERS)
   if response.status_code == 201:
-    logger.info(F"Add Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}")
+    message = F"Add Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}"
+    logger.info(message)
+    print(message)
   else:
-    logger.info(F"BAD Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}")  
-
+    message = F"BAD Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}"
+    logger.info(message)  
+    logger.info(message)
+    print(message)

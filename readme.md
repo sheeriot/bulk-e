@@ -25,10 +25,39 @@ Post Device API is here
 }
 ```
 
-Two files for setup.
+## Bulk-E Device Add Setup
 
-1. import{ID}-common.csv - contains common parameters
-1. import{ID}-devices.csv - list of devices with values
+This section provides brief instructions for setting up the Bulk-E Device Add script.
 
-API key be collected during run. Keeps it out fo file system and shell history.
+Setup of Python is outside the scope of this readme.
+
+### Device and Commons CSV Files
+
+Create two (2) files for each import group.
+
+1. {importName}-commons.csv - contains the shared parameters
+1. {importName}}-devices.csv - list of devices with unique values
+
+### Setup .env
+The access_token (created at the Everynet Network Server) with rights to create Devices. This is stored in a hidden file named `.env` for the local setup.
+
+`.env`
+``` 
+NS_TOKEN=xxxxx
+```
+
+### Run the Script
+
+Pass the "Import Name" to the python script. 
+
+e.g.
+```
+# python bulk-e.py runX
+
+Devices Filename: imports/runX-devices.csv
+Commons Filename: imports/runX-common.csv
+Logging Filename: imports/runX-logging.txt
+```
+
+
 
