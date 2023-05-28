@@ -16,6 +16,7 @@ print(F'Logging Filename: {logging_file}')
 
 devices_df = pd.read_csv(devices_file)
 commons_df = pd.read_csv(commons_file)
+print(F"Shared Settings\n{commons_df}")
 
 logging.basicConfig(filename=logging_file, 
 					format='%(asctime)s %(message)s', 
@@ -39,7 +40,7 @@ BASEPATH = "/api/"
 API_VERSION = "v1.0"
 REQ_URL = HTTP_SCHEMA + BASEURL + BASEPATH + API_VERSION
 
-HEADERS = {"accept": "application/json", "Content-Type": "application/json"}
+HEADERS = {"Accept": "application/json", "Content-Type": "application/json"}
 
 path = "/devices"
 url = REQ_URL + path
@@ -84,7 +85,7 @@ for i in range(0, len(deviceimport_df)):
   data['encryption'] = row['encryption'].upper()
   data['dev_class'] = row['dev_class'].upper()
   data['counters_size'] = int(row['counters_size'])
-  data['band'] = row['band']
+  data['band'] = row['band'].upper()
 
   adr = {}
   adr['mode'] = row['adr']
@@ -99,11 +100,18 @@ for i in range(0, len(deviceimport_df)):
 
   response = requests.post(url, data_json, params={"access_token": NS_TOKEN}, headers=HEADERS)
   if response.status_code == 201:
-    message = F"Add Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}"
+    # print(response.request.url)
+    # print(response.request.headers)
+    # print(response.request.body)
+    message = F"Success: Device Added {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}"
     logger.info(message)
     print(message)
+
   else:
-    message = F"BAD Device Result: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}"
+    # print("--------------------\nRequest Details:")
+    # print(response.request.url)
+    # print(response.request.headers)
+    # print(response.request.body)
+    message = F"Failed: Device NOT ADDED: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}"
     logger.info(message)  
-    logger.info(message)
     print(message)
