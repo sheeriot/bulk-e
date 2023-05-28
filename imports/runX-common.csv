@@ -1,2 +1,2 @@
-activation,encryption,dev_class,counters_size,adr,tx_power,datarate,band,common_tags
-us902-928,OTAA,ns,a,4,on,,,us,"runX,bulk-e"
+band,activation,encryption,dev_class,counters_size,adr,tx_power,datarate,common_tags
+us902-928,otaa,ns,a,4,on,,,"runX,bulk-e"
