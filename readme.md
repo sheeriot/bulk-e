@@ -31,6 +31,9 @@ This section provides brief instructions for setting up the Bulk-E Device Add sc
 
 Setup of Python is outside the scope of this readme.
 
+If using windows, go here:
+* https://www.digitalocean.com/community/tutorials/install-python-windows-10
+
 ### Device and Commons CSV Files
 
 Create two (2) files for each import group.
