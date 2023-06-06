@@ -62,7 +62,11 @@ Logging Filename: imports/runX-logging.txt
 ### Notes
 
 1. if not in the US, edit the URL on line 37 for your Network Server (NS) URL
-1. ADR Static settings for "datarate" and "tx_power" are not yet implemented
-1. OTAA only at this time; ABP (activation by personalization) not yet implemented
+1. 
+1. Activation by OTAA and ABP are implemented.
+2. OTAA needs AppKey. ABP needs NwkSKey, AppSKey, Dev_Addr
+3. ADR Static settings for "datarate" and "tx_power" are not yet implemented
+
+
 
 
