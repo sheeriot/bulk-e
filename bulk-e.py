@@ -14,9 +14,9 @@ print(F'Devices Filename: {devices_file}')
 print(F'Commons Filename: {commons_file}')
 print(F'Logging Filename: {logging_file}')
 
-devices_df = pd.read_csv(devices_file)
-commons_df = pd.read_csv(commons_file)
-print(F"Shared Settings\n{commons_df}")
+devices_df = pd.read_csv(devices_file, dtype=str)
+commons_df = pd.read_csv(commons_file, dtype=str)
+# print(F"Shared Settings\n{commons_df}")
 
 logging.basicConfig(filename=logging_file, 
 					format='%(asctime)s %(message)s', 
@@ -49,8 +49,14 @@ url = REQ_URL + path
 deviceimport_df = devices_df
 
 # Add "commons" columns if not present in devices file
+if 'app_eui' not in devices_df.columns:
+  deviceimport_df = deviceimport_df.assign(app_eui = str(commons_df['app_eui'][0]))
 if 'activation' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(activation = commons_df['activation'][0])
+if 'appskey' not in devices_df.columns:
+  deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
+if 'nwkskey' not in devices_df.columns:
+  deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
 if 'encryption' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(encryption = commons_df['encryption'][0])
 if 'dev_class' not in devices_df.columns:
@@ -68,6 +74,9 @@ if 'band' not in devices_df.columns:
 if 'common_tags' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(common_tags = commons_df['common_tags'][0])
 
+
+
+
 # Process the import dataframe, create device (post) at NS
 for i in range(0, len(deviceimport_df)):
   # get the row
@@ -79,9 +88,15 @@ for i in range(0, len(deviceimport_df)):
   common_tags=row['common_tags'].split(',')
 
   data['dev_eui'] = row['dev_eui'].lower()
-  data['app_eui'] = row['app_eui'].lower()
-  data['app_key'] = row['app_key'].lower()
+  data['app_eui'] = row['app_eui']
+  print(data['app_eui'])
   data['activation'] = row['activation'].upper()
+  if data['activation'] == 'OTAA':
+    data['app_key'] = row['app_key']
+  elif data['activation'] == 'ABP':
+    data['dev_addr'] = row['dev_addr']
+    data['appskey'] = row['appskey']
+    data['nwkskey'] = row['nwkskey']
   data['encryption'] = row['encryption'].upper()
   data['dev_class'] = row['dev_class'].upper()
   data['counters_size'] = int(row['counters_size'])
@@ -96,7 +111,7 @@ for i in range(0, len(deviceimport_df)):
   data['tags'] = tags + common_tags
 
   data_json = json.dumps(data)
-  # print(data_json)
+  print(data_json)
 
   response = requests.post(url, data_json, params={"access_token": NS_TOKEN}, headers=HEADERS)
   if response.status_code == 201:
