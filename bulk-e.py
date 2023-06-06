@@ -16,7 +16,7 @@ print(F'Logging Filename: {logging_file}')
 
 devices_df = pd.read_csv(devices_file, dtype=str)
 commons_df = pd.read_csv(commons_file, dtype=str)
-print(F"Shared Settings\n{commons_df}")
+# print(F"Shared Settings\n{commons_df}")
 
 logging.basicConfig(filename=logging_file, 
 					format='%(asctime)s %(message)s', 
@@ -55,8 +55,8 @@ if 'activation' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(activation = commons_df['activation'][0])
 if 'appskey' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
-if 'netskey' not in devices_df.columns:
-  deviceimport_df = deviceimport_df.assign(netskey = str(commons_df['netskey'][0]))
+if 'nwkskey' not in devices_df.columns:
+  deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
 if 'encryption' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(encryption = commons_df['encryption'][0])
 if 'dev_class' not in devices_df.columns:
@@ -91,11 +91,12 @@ for i in range(0, len(deviceimport_df)):
   data['app_eui'] = row['app_eui']
   print(data['app_eui'])
   data['activation'] = row['activation'].upper()
-  if data['activation'] == 'otaa':
+  if data['activation'] == 'OTAA':
     data['app_key'] = row['app_key']
-  elif data['activation'] == 'abp':
+  elif data['activation'] == 'ABP':
+    data['dev_addr'] = row['dev_addr']
     data['appskey'] = row['appskey']
-    data['netskey'] = row['netskey']
+    data['nwkskey'] = row['nwkskey']
   data['encryption'] = row['encryption'].upper()
   data['dev_class'] = row['dev_class'].upper()
   data['counters_size'] = int(row['counters_size'])
