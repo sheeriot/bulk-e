@@ -74,9 +74,6 @@ if 'band' not in devices_df.columns:
 if 'common_tags' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(common_tags = commons_df['common_tags'][0])
 
-
-
-
 # Process the import dataframe, create device (post) at NS
 for i in range(0, len(deviceimport_df)):
   # get the row
@@ -84,8 +81,8 @@ for i in range(0, len(deviceimport_df)):
   data = {}
 
   # prep the tags
-  tags=row['tags'].split(',')
-  common_tags=row['common_tags'].split(',')
+  tags=row['tags'].split(' ')
+  common_tags=row['common_tags'].split(' ')
 
   data['dev_eui'] = row['dev_eui'].lower()
   data['app_eui'] = row['app_eui']

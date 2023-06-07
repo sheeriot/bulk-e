@@ -1,0 +1,2 @@
+band,activation,encryption,nwkskey,appskey,dev_class,counters_size,adr,tx_power,datarate,common_tags
+us902-928,abp,ns,112233447e1516a609cfabf715884f3c,556677887e15d2a6abf7cf4f3c158809,a,4,on,,,groupY bulk-e
