@@ -55,17 +55,22 @@ Pass the "Import Name" to the python script.
 
 e.g.
 ```
-# python bulk-e.py runX
+# python bulk-e.py runX apply
 
 Devices Filename: imports/runX-devices.csv
 Commons Filename: imports/runX-common.csv
 Logging Filename: imports/runX-logging.txt
 ```
 
+Command line options:
+
+* Arg 1 - filename prefix.
+* Arg 2 - action - plan/apply
+
 ### Notes
 
 1. if not in the US, edit the URL on line 37 for your Network Server (NS) URL
-1. 
+1. use the key word "apply" after the import file name to apply your changes (defaults to Plan Only)
 1. Activation by OTAA and ABP are implemented.
 2. OTAA needs AppKey. ABP needs NwkSKey, AppSKey, Dev_Addr
 3. ADR Static settings for "datarate" and "tx_power" are not yet implemented

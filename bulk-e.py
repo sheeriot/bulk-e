@@ -7,6 +7,19 @@ import requests
 # get the file name from the script argument
 files_base = "imports/" + sys.argv[1]
 
+if len(sys.argv)-1 == 1:
+  action = 'plan'
+elif len(sys.argv)-1 == 2:
+  if sys.argv[2] == 'plan':
+    action = 'plan'
+  if sys.argv[2] == 'apply':
+    action = 'apply'
+  if sys.argv[2] == 'destroy':
+    action = 'destroy'
+elif len(sys.argv)-1 > 2:
+  print('too many arguments')
+  exit() 
+
 devices_file = files_base + "-devices.csv"
 commons_file = files_base + "-common.csv"
 logging_file = files_base + "-logging.txt" 
@@ -75,6 +88,10 @@ if 'common_tags' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(common_tags = commons_df['common_tags'][0])
 
 # Process the import dataframe, create device (post) at NS
+
+if action == 'plan':
+  print('===== Import Plan Only ======')
+
 for i in range(0, len(deviceimport_df)):
   # get the row
   row=deviceimport_df.iloc[i]
@@ -86,7 +103,6 @@ for i in range(0, len(deviceimport_df)):
 
   data['dev_eui'] = row['dev_eui'].lower()
   data['app_eui'] = row['app_eui']
-  print(data['app_eui'])
   data['activation'] = row['activation'].upper()
   if data['activation'] == 'OTAA':
     data['app_key'] = row['app_key']
@@ -108,22 +124,24 @@ for i in range(0, len(deviceimport_df)):
   data['tags'] = tags + common_tags
 
   data_json = json.dumps(data)
-  print(data_json)
 
-  response = requests.post(url, data_json, params={"access_token": NS_TOKEN}, headers=HEADERS)
-  if response.status_code == 201:
-    # print(response.request.url)
-    # print(response.request.headers)
-    # print(response.request.body)
-    message = F"Success: Device Added {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}"
-    logger.info(message)
-    print(message)
+  if action == 'plan':
+    print(f'Plan Device {i}: {data_json}')
+  elif action == 'apply':
+    response = requests.post(url, data_json, params={"access_token": NS_TOKEN}, headers=HEADERS)
+    if response.status_code == 201:
+      # print(response.request.url)
+      # print(response.request.headers)
+      # print(response.request.body)
+      message = F"Success: Device Added {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}"
+      logger.info(message)
+      print(message)
 
-  else:
-    # print("--------------------\nRequest Details:")
-    # print(response.request.url)
-    # print(response.request.headers)
-    # print(response.request.body)
-    message = F"Failed: Device NOT ADDED: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}"
-    logger.info(message)  
-    print(message)
+    else:
+      # print("--------------------\nRequest Details:")
+      # print(response.request.url)
+      # print(response.request.headers)
+      # print(response.request.body)
+      message = F"Failed: Device NOT ADDED: {data['dev_eui']}, Status Code: {response.status_code}, reason:{response.reason}, text:{response.text}"
+      logger.info(message)  
+      print(message)
