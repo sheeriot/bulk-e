@@ -27,10 +27,6 @@ print(F'Devices Filename: {devices_file}')
 print(F'Commons Filename: {commons_file}')
 print(F'Logging Filename: {logging_file}')
 
-devices_df = pd.read_csv(devices_file, dtype=str)
-commons_df = pd.read_csv(commons_file, dtype=str)
-# print(F"Shared Settings\n{commons_df}")
-
 logging.basicConfig(filename=logging_file, 
 					format='%(asctime)s %(message)s', 
           datefmt='%Y-%m-%d %H:%M:%S',
@@ -43,6 +39,11 @@ logger.setLevel(logging.INFO)
 # Print a log message 
 logger.info('----------------------------------')
 logger.info(F"Import Initiated! {sys.argv[1]}") 
+
+devices_df = pd.read_csv(devices_file, dtype='string', keep_default_na=False)
+# print(f'Devices_DF Column Types:\n{devices_df.dtypes}')
+commons_df = pd.read_csv(commons_file, dtype='string', keep_default_na=False)
+# print(F"Shared Settings\n{commons_df}")
 
 load_dotenv()
 NS_TOKEN = os.getenv('NS_TOKEN')
@@ -67,9 +68,11 @@ if 'app_eui' not in devices_df.columns:
 if 'activation' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(activation = commons_df['activation'][0])
 if 'appskey' not in devices_df.columns:
-  deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
+  if 'appskey' in commons_df.columns:
+    deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
 if 'nwkskey' not in devices_df.columns:
-  deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
+  if 'nwkskey' in commons_df.columns:
+    deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
 if 'encryption' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(encryption = commons_df['encryption'][0])
 if 'dev_class' not in devices_df.columns:
@@ -97,10 +100,6 @@ for i in range(0, len(deviceimport_df)):
   row=deviceimport_df.iloc[i]
   data = {}
 
-  # prep the tags
-  tags=row['tags'].split(' ')
-  common_tags=row['common_tags'].split(' ')
-
   data['dev_eui'] = row['dev_eui'].lower()
   data['app_eui'] = row['app_eui']
   data['activation'] = row['activation'].upper()
@@ -121,6 +120,12 @@ for i in range(0, len(deviceimport_df)):
   # adr['datarate'] = row['datarate']
   data['adr'] = adr
 
+  # Now the tags
+  print(f"Row Tag: {row['tags']}")
+  print(f"Type: {type(row['tags'])}")    
+  
+  tags=row['tags'].split(' ')
+  common_tags=row['common_tags'].split(' ')
   data['tags'] = tags + common_tags
 
   data_json = json.dumps(data)
