@@ -67,9 +67,11 @@ if 'app_eui' not in devices_df.columns:
 if 'activation' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(activation = commons_df['activation'][0])
 if 'appskey' not in devices_df.columns:
-  deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
+  if 'appskey' in commons_df.columns:
+    deviceimport_df = deviceimport_df.assign(appskey = str(commons_df['appskey'][0]))
 if 'nwkskey' not in devices_df.columns:
-  deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
+  if 'nwkskey' in commons_df.columns:
+    deviceimport_df = deviceimport_df.assign(nwkskey = str(commons_df['nwkskey'][0]))
 if 'encryption' not in devices_df.columns:
   deviceimport_df = deviceimport_df.assign(encryption = commons_df['encryption'][0])
 if 'dev_class' not in devices_df.columns:
