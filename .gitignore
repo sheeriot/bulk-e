@@ -1,3 +1,4 @@
 *.env
 imports
 .vscode
+settings.json
