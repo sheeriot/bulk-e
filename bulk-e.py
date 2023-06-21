@@ -120,13 +120,12 @@ for i in range(0, len(deviceimport_df)):
   # adr['datarate'] = row['datarate']
   data['adr'] = adr
 
-  # Now the tags
-  print(f"Row Tag: {row['tags']}")
-  print(f"Type: {type(row['tags'])}")    
+  # Now the tags  
   
   tags=row['tags'].split(' ')
   common_tags=row['common_tags'].split(' ')
-  data['tags'] = tags + common_tags
+  # combine tags, remove blanks
+  data['tags'] = str_list = list(filter(None, tags + common_tags))
 
   data_json = json.dumps(data)
 
